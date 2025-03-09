@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        body {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <textarea id="content" placeholder="Enter your text here..."></textarea>
+    <button onclick="updateText()">Update</button>
+    <script>
+        const contentInput = document.getElementById('content');
+
+        window.onload = async function() {
+            try {
+                const response = await fetch('/api/text');
+                if (response.ok) {
+                    const text = await response.json();
+                    contentInput.value = text.content;
+                }
+            } catch (error) {
+                contentInput.value = '';
+            }
+        };
+
+        async function updateText() {
+            try {
+                await fetch('/api/text', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ content: contentInput.value })
+                });
+            } catch (error) {}
+        }
+    </script>
+</body>
+</html>
