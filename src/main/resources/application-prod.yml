@@ -1,0 +1,65 @@
+spring:
+  datasource:
+    url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:25060/textdb}
+    username: ${JDBC_DATABASE_USERNAME:postgres}
+    password: ${JDBC_DATABASE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  ai:
+    mcp:
+      server:
+        name: text-content-server
+        version: 0.0.1
+        type: ASYNC
+        stdio: false
+        sse-message-endpoint: /mcp/message
+        resource-change-notification: true
+        tool-change-notification: true
+        prompt-change-notification: true
+  main:
+    banner-mode: off
+  mvc:
+    async:
+      request-timeout: 300000
+  task:
+    execution:
+      pool:
+        core-size: 8
+        max-size: 50
+        queue-capacity: 100
+        keep-alive: 60s
+
+server:
+  port: 8080
+  servlet:
+    encoding:
+      force: true
+    session:
+      timeout: 60m
+  connection-timeout: 300000
+  tomcat:
+    threads:
+      max: 200
+    min-spare-threads: 20
+    max-connections: 10000
+    accept-count: 100
+    connection-timeout: 120000
+    max-keep-alive-requests: -1
+  undertow:
+    buffer-size: 16384
+    direct-buffers: true
+
+logging:
+  level:
+    org.springframework: WARN
+    com.example: INFO
+    Exposed: INFO
+    org.springframework.web: DEBUG
+  file:
+    name: ./target/starter-webflux-server.log 
